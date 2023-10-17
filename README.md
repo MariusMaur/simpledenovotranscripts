@@ -5,10 +5,11 @@
 - [Usage](#usage)
   - [Prepare environment](#prepare-environment)
   - [Example runs:](#example-runs)
-  - [Input data examples](#input-data-examples)
-  - [`--sra` input:](#--sra-input)
-  - [`--local` input:](#--local-input)
+  - [Input data examples:](#input-data-examples)
+    - [`--sra` input:](#--sra-input)
+    - [`--local` input:](#--local-input)
 - [Full help](#full-help)
+- [Program versions](#program-versions)
 
 
 
@@ -44,10 +45,10 @@ conda activate /cluster/projects/nn9825k/admin/mamba/snakemake
   python script_name.py --account my_slurm_account --compleasm busco_dataset --local my_local_data_table.tsv
   ```
 
-### Input data examples
+### Input data examples:
 
 
-### `--sra` input:
+#### `--sra` input:
 
 This table requires two columns: `species_id` and `sra_accession`. They should be tab-separated.
 
@@ -62,14 +63,7 @@ In the example above:
 - `species1`, `species2`, and `species3` are the identifiers for different species or samples.
 - `SRR1234567`, `SRR1234568`, and `SRR1234569` are SRA accession numbers.
 
-Usage with the script:
-```bash
-python script_name.py --account my_slurm_account --compleasm insecta --sra sample_sra_table.tsv
-```
-
----
-
-### `--local` input:
+#### `--local` input:
 
 This table can have three or optionally four columns: `species_id`, `r1`, `r2`, and optionally `long_reads`. They should be tab-separated.
 
@@ -107,5 +101,12 @@ options:
   --local LOCAL         Table with three (optionally four) columns: species_id r1 r2 [long_reads] (tab separated)
 ```
 
-
+## Program versions
+- Snakemake v7.32.4
+- SRA SRA-Toolkit v3.0.3
+- FastQC v0.11.9
+- Trimmomatic v0.39
+- Trinity v2.15.1
+- Compleasm v0.2.2
+- Transdecoder v5.7.0
 

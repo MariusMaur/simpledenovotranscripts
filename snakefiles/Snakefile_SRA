@@ -1,0 +1,118 @@
+import pandas as pd
+
+# Read configuration directly from snakemake.config
+CONFIG = config
+
+def get_samples():
+    samples_dict = {}
+    with open(CONFIG["samples_table"], 'r') as f:
+        for line in f:
+            species_id, sra = line.strip().split('\t')
+            samples_dict[species_id] = {"sra": sra}
+    return samples_dict
+
+
+
+SAMPLES = get_samples()
+
+
+rule all:
+    input:
+        expand("SRA_reads/{sample}/{sample}_R1.fastq", sample=SAMPLES.keys()),
+        expand("SRA_reads/{sample}/{sample}_R2.fastq", sample=SAMPLES.keys()),
+        expand("2_trimmomatic/{sample}/{sample}.R1.paired.trimmed.WL4.WQ30.ML80.fastq.gz", sample=SAMPLES.keys()),
+        expand("2_trimmomatic/{sample}/{sample}.R1.unpaired.trimmed.WL4.WQ30.ML80.fastq.gz", sample=SAMPLES.keys()),
+        expand("2_trimmomatic/{sample}/{sample}.R2.paired.trimmed.WL4.WQ30.ML80.fastq.gz", sample=SAMPLES.keys()),
+        expand("2_trimmomatic/{sample}/{sample}.R2.unpaired.trimmed.WL4.WQ30.ML80.fastq.gz", sample=SAMPLES.keys()),
+        expand("3_trinity/{sample}/{sample}_trinity.Trinity.fasta", sample=SAMPLES.keys()),
+        expand("4_compleasm/{sample}_compleasm/summary.txt", sample=SAMPLES.keys()),
+        expand("5_transdecoder/{sample}/{sample}.trinity.AA.fa", sample=SAMPLES.keys())
+
+rule SRA:
+    output:
+        readpair1 = "SRA_reads/{sample}/{sample}_R1.fastq",
+        readpair2 = "SRA_reads/{sample}/{sample}_R2.fastq"
+    params:
+        rule_name="SRA",
+        sra = lambda wildcards: SAMPLES[wildcards.sample]["sra"]
+    resources:
+        mem=8*1024,  
+        cpu=4,
+        time="08:00:00"
+    shell:
+        """
+        slurm_scripts/SRA.slurm {wildcards.sample} {params.sra}
+        """
+
+rule trimmomatic:
+    params:
+        rule_name="trimmomatic",
+        trimmomatic_options=config['trimmomatic_options']
+    input:
+        readpair1 = "SRA_reads/{sample}/{sample}_R1.fastq",
+        readpair2 = "SRA_reads/{sample}/{sample}_R2.fastq"
+    output:
+        r1_paired = "2_trimmomatic/{sample}/{sample}.R1.paired.trimmed.WL4.WQ30.ML80.fastq.gz",
+        r1_unpaired = "2_trimmomatic/{sample}/{sample}.R1.unpaired.trimmed.WL4.WQ30.ML80.fastq.gz",
+        r2_paired = "2_trimmomatic/{sample}/{sample}.R2.paired.trimmed.WL4.WQ30.ML80.fastq.gz",
+        r2_unpaired = "2_trimmomatic/{sample}/{sample}.R2.unpaired.trimmed.WL4.WQ30.ML80.fastq.gz"
+    resources:
+        mem=32*1024,
+        cpu=16,
+        time="04:00:00"
+    shell:
+        """
+        slurm_scripts/trimmomatic_fastq.slurm {wildcards.sample} {input.readpair1} {input.readpair2} "{params.trimmomatic_options}"
+        """
+
+
+rule trinity:
+    input:
+        r1_paired = "2_trimmomatic/{sample}/{sample}.R1.paired.trimmed.WL4.WQ30.ML80.fastq.gz",
+        r2_paired = "2_trimmomatic/{sample}/{sample}.R2.paired.trimmed.WL4.WQ30.ML80.fastq.gz"
+    params:
+        rule_name="trinity"
+    output:
+        trinity = "3_trinity/{sample}/{sample}_trinity.Trinity.fasta"
+    resources:
+        mem=128*1024,  
+        cpu=32,
+        time="72:00:00"
+    shell:
+        """
+        slurm_scripts/trinity.slurm {wildcards.sample} {input.r1_paired} {input.r2_paired} NA
+        """
+
+
+rule compleasm:
+    input:
+        trinity = "3_trinity/{sample}/{sample}_trinity.Trinity.fasta"
+    params:
+        compleasm_arg=config['compleasm'],
+        rule_name="compleasm"
+    output:
+        compleasm_out = "4_compleasm/{sample}_compleasm/summary.txt"
+    resources:
+        mem=16*1024, 
+        cpu=4,
+        time="03:00:00"
+    shell:
+        """
+        slurm_scripts/compleasm.slurm {wildcards.sample} {params.compleasm_arg}
+        """
+
+rule transdecoder:
+    input:
+        trinity_phase2 = "3_trinity/{sample}/{sample}_trinity.Trinity.fasta"
+    output:
+        transdecoder = "5_transdecoder/{sample}/{sample}.trinity.AA.fa"
+    params:
+        rule_name="transdecoder"
+    resources:
+        mem=16*1024, 
+        cpu=4,
+        time="02:00:00"
+    shell:
+        """
+        slurm_scripts/transdecoder.slurm {wildcards.sample}
+        """

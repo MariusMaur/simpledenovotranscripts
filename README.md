@@ -17,7 +17,7 @@
 
 The script automates a workflow of either fetching Sequence Read Archive (SRA) data or local data, and then setting up configurations to run one of two snakemake pipelines. `--sra` runs SRA prefetch before starting the pipeline [Snakefile_SRA](/snakefiles/Snakefile_SRA), while `--local` starts directly with QC and trimming of input reads.
 
-**Disclaimer: this is written specifically for the venom group at UiO and is integrated with the HPC Saga at Sigma2.**
+**This is written specifically for the venom group at UiO and is integrated with the HPC Saga at Sigma2.**
 
 ## Usage
 
@@ -31,18 +31,33 @@ source ${EBROOTMAMBA}/bin/activate
 conda activate /cluster/projects/nn9825k/admin/mamba/snakemake
 ```
 
+Then set up a screen environment (to run the pipeline while offline):
+- screen -S (start and name a new environment)
+- screen -r (access your environment)
+- ctrl + a + d (detaches from enviroment)
+- ctrl + d (terminates environment)
+
+```{bash}
+# Set up screen enviroment
+screen -S my_pipeline_run
+
+# Run the pipeline (see example runs below)
+python master.py ...
+```
+
+
 ### Example runs:
 
 - To fetch SRA data and run the snakemake pipeline:
 
   ```bash
-  python script_name.py --account my_slurm_account --compleasm busco_dataset --sra my_sra_table.tsv
+  python master.py --account my_slurm_account --compleasm busco_dataset --sra my_sra_table.tsv
   ```
 
 - To run the snakemake pipeline with local data:
 
   ```bash
-  python script_name.py --account my_slurm_account --compleasm busco_dataset --local my_local_data_table.tsv
+  python master.py --account my_slurm_account --compleasm busco_dataset --local my_local_table.tsv
   ```
 
 ### Input data examples:

@@ -32,10 +32,11 @@ conda activate /cluster/projects/nn9825k/admin/mamba/snakemake
 ```
 
 Then set up a screen environment (to run the pipeline while offline):
-- screen -S (start and name a new environment)
-- screen -r (access your environment)
-- ctrl + a + d (detaches from enviroment)
-- ctrl + d (terminates environment)
+- screen -S env_name (start and name a new environment)
+- screen -r env_name (access your environment)
+- In screen environment:
+  - ctrl + a + d (detaches from enviroment)
+  - ctrl + d (terminates environment)
 
 ```{bash}
 # Set up screen enviroment
@@ -91,8 +92,8 @@ species3  /path/to/species3_R1.fastq  /path/to/species3_R2.fastq  /path/to/speci
 
 In the example above:
 - `species1`, `species2`, and `species3` are the identifiers for different species or samples.
-- The paths `/path/to/species1_R1.fastq`, `/path/to/species1_R2.fastq`, etc., are the file paths to the paired-end reads for the corresponding species.
-- The optional `long_reads` column is for long-read sequencing data, and not every species might have this.
+- The paths `/path/to/species1_R1.fastq`, `/path/to/species1_R2.fastq`, etc., are the file paths to the paired-end reads for the corresponding sample.
+- The optional `long_reads` column is for long-read sequencing data.
 
 ## Full help
 

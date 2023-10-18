@@ -29,7 +29,7 @@ OUTPUT_DIR="3_trinity/${ID}/${ID}_trinity"
 # Create the output directory if it doesn't exist
 mkdir -p $OUTPUT_DIR
 
-TRINITY_PARAMS="--seqType fq --left $R1_INPUT --right $R2_INPUT --SS_lib_type RF --CPU 32 --max_memory 128G --output $OUTPUT_DIR"
+TRINITY_PARAMS="--seqType fq --left $R1_INPUT --right $R2_INPUT --SS_lib_type RF --CPU 32 --max_memory 128G --full_cleanup --output $OUTPUT_DIR"
 
 # Check if long reads are provided and append to the parameters
 if [[ "$LONG_READS" != "NA" && -f "$LONG_READS" ]]; then

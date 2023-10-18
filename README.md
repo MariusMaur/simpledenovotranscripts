@@ -4,10 +4,12 @@
 - [Script overview](#script-overview)
 - [Usage](#usage)
   - [Prepare environment](#prepare-environment)
-  - [Example runs:](#example-runs)
-  - [Input data examples:](#input-data-examples)
+  - [How to run:](#how-to-run)
+  - [Input data:](#input-data)
     - [`--sra` input:](#--sra-input)
     - [`--local` input:](#--local-input)
+- [Run example](#run-example)
+  - [Output](#output)
 - [Full help](#full-help)
 - [Program versions](#program-versions)
 
@@ -47,7 +49,7 @@ python master.py ...
 ```
 
 
-### Example runs:
+### How to run:
 
 - To fetch SRA data and run the snakemake pipeline:
 
@@ -61,7 +63,7 @@ python master.py ...
   python master.py --account my_slurm_account --compleasm busco_dataset --local my_local_table.tsv
   ```
 
-### Input data examples:
+### Input data:
 
 
 #### `--sra` input:
@@ -94,6 +96,66 @@ In the example above:
 - `species1`, `species2`, and `species3` are the identifiers for different species or samples.
 - The paths `/path/to/species1_R1.fastq`, `/path/to/species1_R2.fastq`, etc., are the file paths to the paired-end reads for the corresponding sample.
 - The optional `long_reads` column is for long-read sequencing data.
+
+## Run example
+
+```{bash}
+# Input spider_table.tsv
+Stegodyphus_dumicola  SRR10216514
+Triconephila_clavata  SRR15356212
+
+# Run
+python master.py --sra spider_table.tsv --compleasm arachnida --account nn9825k
+```
+
+### Output
+
+```{bash}
+├── 0_slurm_logs # Slurm submission logs
+│   ├── compleasm_Stegodyphus_dumicola_slurm_9743926.log
+│   ├── compleasm_Trichonephila_clavata_slurm_9743250.log
+│   ├── SRA_Stegodyphus_dumicola_slurm_9741736.log
+│   ├── SRA_Trichonephila_clavata_slurm_9741727.log
+│   ├── transdecoder_Stegodyphus_dumicola_slurm_9743907.log
+│   ├── transdecoder_Trichonephila_clavata_slurm_9743913.log
+│   ├── trimmomatic_Stegodyphus_dumicola_slurm_9741749.log
+│   ├── trimmomatic_Trichonephila_clavata_slurm_9741748.log
+│   ├── trinity_Stegodyphus_dumicola_slurm_9741918.log
+│   └── trinity_Trichonephila_clavata_slurm_9741902.log
+├── 1_fastqc # FastQC results
+│   ├── after_trim
+│   └── before_trim
+├── 2_trimmomatic # Trimming results
+│   ├── Stegodyphus_dumicola
+│   └── Trichonephila_clavata
+├── 4_compleasm # Compleasm results
+│   ├── Stegodyphus_dumicola_compleasm
+│   └── Trichonephila_clavata_compleasm
+├── 5_transdecoder # Transdecoder results
+│   ├── Stegodyphus_dumicola
+│   └── Trichonephila_clavata
+├── master.py
+├── README.md
+├── slurm_scripts 
+│   ├── compleasm.slurm
+│   ├── SRA.slurm
+│   ├── transdecoder.slurm
+│   ├── trimmomatic_fastq.slurm
+│   └── trinity.slurm
+├── snakefiles
+│   ├── Snakefile_local
+│   └── Snakefile_SRA
+├── spiders_sra.list
+├── SRA_prefetch # If --SRA
+│   ├── SRR10216514
+│   └── SRR15356212
+├── SRA_reads # If --SRA
+│   ├── Stegodyphus_dumicola
+│   └── Trichonephila_clavata
+└── yaml
+    ├── local.yaml
+    └── sra.yaml
+```
 
 ## Full help
 

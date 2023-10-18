@@ -128,6 +128,9 @@ python master.py --sra spider_table.tsv --compleasm arachnida --account nn9825k
 ├── 2_trimmomatic # Trimming results
 │   ├── Stegodyphus_dumicola
 │   └── Trichonephila_clavata
+├── 3_trinity
+│   ├── Stegodyphus_dumicola
+│   └── Trichonephila_clavata
 ├── 4_compleasm # Compleasm results
 │   ├── Stegodyphus_dumicola_compleasm
 │   └── Trichonephila_clavata_compleasm

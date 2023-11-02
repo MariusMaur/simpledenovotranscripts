@@ -25,29 +25,13 @@ The script automates a workflow of either fetching Sequence Read Archive (SRA) d
 
 ### Prepare environment
 
-No installation required, everything you need is already prepared. Before using the script, make sure the required environment is set up:
+No installation required, everything you need is already prepared. Set up a screen or tmux environment then load the snakemake environment:
 
 ```bash
 module load Mamba/4.14.0-0
 source ${EBROOTMAMBA}/bin/activate
 conda activate /cluster/projects/nn9825k/admin/mamba/snakemake
 ```
-
-Then set up a screen environment (to run the pipeline while offline):
-- screen -S env_name (start and name a new environment)
-- screen -r env_name (access your environment)
-- In screen environment:
-  - ctrl + a + d (detaches from enviroment)
-  - ctrl + d (terminates environment)
-
-```{bash}
-# Set up screen enviroment
-screen -S my_pipeline_run
-
-# Run the pipeline (see example runs below)
-python master.py ...
-```
-
 
 ### How to run:
 

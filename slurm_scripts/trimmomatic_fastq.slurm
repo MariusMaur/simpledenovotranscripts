@@ -35,10 +35,10 @@ fastqc -o 1_fastqc/before_trim/${ID} --threads $CPUS $R1_INPUT $R2_INPUT
 echo $TRIMMOMATIC_OPTIONS
 
 # Paths for output files
-R1_PAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R1.paired.trimmed.WL4.WQ30.ML80.fastq.gz
-R1_UNPAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R1.unpaired.trimmed.WL4.WQ30.ML80.fastq.gz
-R2_PAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R2.paired.trimmed.WL4.WQ30.ML80.fastq.gz
-R2_UNPAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R2.unpaired.trimmed.WL4.WQ30.ML80.fastq.gz
+R1_PAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R1.paired.trimmed.fastq.gz
+R1_UNPAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R1.unpaired.trimmed.fastq.gz
+R2_PAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R2.paired.trimmed.fastq.gz
+R2_UNPAIRED_OUTPUT=2_trimmomatic/${ID}/${ID}.R2.unpaired.trimmed.fastq.gz
 
 # Run trimmomatic
 java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar PE -threads $CPUS -phred33 \

@@ -37,8 +37,10 @@ if [[ "$LONG_READS" != "NA" && -f "$LONG_READS" ]]; then
     TRINITY_PARAMS+=" --long_reads $LONG_READS"
     LONG_READS_DIR=$(dirname "$(realpath $LONG_READS)")
     singularity exec --bind $PWD --bind $LONG_READS_DIR -e $SINGULARITY_CONTAINER Trinity $TRINITY_PARAMS
+    rm -r $OUTPUT_DIR
 else
     echo "Running without long reads"
     # Here we just run Trinity with the parameters without long reads
     singularity exec --bind $PWD -e $SINGULARITY_CONTAINER Trinity $TRINITY_PARAMS
+    rm -r $OUTPUT_DIR
 fi

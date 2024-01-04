@@ -14,7 +14,6 @@
 - [Program versions](#program-versions)
 
 
-
 ## Script overview
 
 The script automates a workflow of either fetching Sequence Read Archive (SRA) data or local data, and then setting up configurations to run one of two snakemake pipelines. `--sra` runs SRA prefetch before starting the pipeline [Snakefile_SRA](/snakefiles/Snakefile_SRA), while `--local` starts directly with the [Snakefile_local](/snakefiles/Snakefile_local).

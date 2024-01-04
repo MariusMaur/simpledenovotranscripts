@@ -25,7 +25,6 @@ rule all:
         expand("2_trimmomatic/{sample}/{sample}.R2.paired.trimmed.fastq.gz", sample=SAMPLES.keys()),
         expand("2_trimmomatic/{sample}/{sample}.R2.unpaired.trimmed.fastq.gz", sample=SAMPLES.keys()),
         expand("3_trinity/{sample}/{sample}_trinity.Trinity.fasta", sample=SAMPLES.keys()),
-        expand("4_compleasm/{sample}_compleasm/summary.txt", sample=SAMPLES.keys()),
         expand("5_transdecoder/{sample}/{sample}.trinity.AA.fa", sample=SAMPLES.keys())
 
 rule SRA:
@@ -36,7 +35,7 @@ rule SRA:
         rule_name="SRA",
         sra = lambda wildcards: SAMPLES[wildcards.sample]["sra"]
     resources:
-        mem=8*1024,  
+        mem=4*1024,  
         cpu=4,
         time="08:00:00"
     shell:
@@ -57,9 +56,9 @@ rule trimmomatic:
         r2_paired = "2_trimmomatic/{sample}/{sample}.R2.paired.trimmed.fastq.gz",
         r2_unpaired = "2_trimmomatic/{sample}/{sample}.R2.unpaired.trimmed.fastq.gz"
     resources:
-        mem=32*1024,
-        cpu=16,
-        time="04:00:00"
+        mem=16*1024,
+        cpu=8,
+        time="06:00:00"
     shell:
         """
         slurm_scripts/trimmomatic_fastq.slurm {wildcards.sample} {input.readpair1} {input.readpair2} "{params.trimmomatic_options}"
@@ -83,24 +82,6 @@ rule trinity:
         slurm_scripts/trinity.slurm {wildcards.sample} {input.r1_paired} {input.r2_paired} NA
         """
 
-
-rule compleasm:
-    input:
-        trinity = "3_trinity/{sample}/{sample}_trinity.Trinity.fasta"
-    params:
-        compleasm_arg=config['compleasm'],
-        rule_name="compleasm"
-    output:
-        compleasm_out = "4_compleasm/{sample}_compleasm/summary.txt"
-    resources:
-        mem=16*1024, 
-        cpu=4,
-        time="03:00:00"
-    shell:
-        """
-        slurm_scripts/compleasm.slurm {wildcards.sample} {params.compleasm_arg}
-        """
-
 rule transdecoder:
     input:
         trinity_phase2 = "3_trinity/{sample}/{sample}_trinity.Trinity.fasta"
@@ -109,7 +90,7 @@ rule transdecoder:
     params:
         rule_name="transdecoder"
     resources:
-        mem=16*1024, 
+        mem=8*1024, 
         cpu=4,
         time="02:00:00"
     shell:

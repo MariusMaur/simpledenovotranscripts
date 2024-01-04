@@ -44,7 +44,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate YAML files.")
     
     parser.add_argument('--account', required=True, help='Input slurm account')
-    parser.add_argument('--compleasm', choices=['insecta', 'arachnida', 'endopterygota', 'hymenoptera', 'sauropsida'], required=True, help='Dataset')
+    parser.add_argument('--compleasm', choices=['insecta', 'arachnida', 'endopterygota', 'hymenoptera', 'sauropsida'], help='Dataset')
     parser.add_argument('--trimmomatic', 
                         default="ILLUMINACLIP:/cluster/software/Trimmomatic/0.39-Java-11/adapters/TruSeq3-PE-2.fa:2:30:10 SLIDINGWINDOW:4:30 MINLEN:80", 
                         help='Options for trimmomatic. Default: "ILLUMINACLIP:/cluster/software/Trimmomatic/0.39-Java-11/adapters/TruSeq3-PE-2.fa:2:30:10 SLIDINGWINDOW:4:30 MINLEN:80"')

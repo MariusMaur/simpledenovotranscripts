@@ -29,7 +29,7 @@ No installation required, everything you need is already prepared. Set up a scre
 ```bash
 module load Mamba/4.14.0-0
 source ${EBROOTMAMBA}/bin/activate
-conda activate /cluster/projects/nn9825k/admin/mamba/snakemake
+conda activate /cluster/projects/nn9825k/admin/mamba/marius_snakemake
 ```
 
 ### How to run:

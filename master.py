@@ -88,7 +88,7 @@ def main():
         print("|     Snakemake pipeline started with SRA     |")
         print("-----------------------------------------------")
         print("")
-        os.system(f"""snakemake --snakefile snakefiles/Snakefile_SRA --configfile yaml/sra.yaml \
+        os.system(f"""snakemake --snakefile snakefiles/Snakefile_SRA --keep-going --configfile yaml/sra.yaml \
             --config trimmomatic_options='{args.trimmomatic}' \
             --cluster 'sbatch --account={args.account} \
             --output=0_slurm_logs/{{params.rule_name}}_{{wildcards.sample}}_slurm_%j.log \

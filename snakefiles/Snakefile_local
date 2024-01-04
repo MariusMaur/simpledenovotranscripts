@@ -29,7 +29,6 @@ rule all:
         expand("2_trimmomatic/{sample}/{sample}.R2.paired.trimmed.fastq.gz", sample=SAMPLES.keys()),
         expand("2_trimmomatic/{sample}/{sample}.R2.unpaired.trimmed.fastq.gz", sample=SAMPLES.keys()),
         expand("3_trinity/{sample}/{sample}_trinity.Trinity.fasta", sample=SAMPLES.keys()),
-        expand("4_compleasm/{sample}_compleasm/summary.txt", sample=SAMPLES.keys()),
         expand("5_transdecoder/{sample}/{sample}.trinity.AA.fa", sample=SAMPLES.keys())
 
 rule trimmomatic:
@@ -70,23 +69,6 @@ rule trinity:
     shell:
         """
         slurm_scripts/trinity.slurm {wildcards.sample} {input.r1_paired} {input.r2_paired} {params.long_reads}
-        """
-
-rule compleasm:
-    input:
-        trinity = "3_trinity/{sample}/{sample}_trinity.Trinity.fasta"
-    params:
-        compleasm_arg=config['compleasm'],
-        rule_name="compleasm"
-    output:
-        compleasm_out = "4_compleasm/{sample}_compleasm/summary.txt"
-    resources:
-        mem=16*1024, 
-        cpu=4,
-        time="03:00:00"
-    shell:
-        """
-        slurm_scripts/compleasm.slurm {wildcards.sample} {params.compleasm_arg}
         """
 
 rule transdecoder:
